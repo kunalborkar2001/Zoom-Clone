@@ -14,11 +14,11 @@ const HomeCard = ({ className, img, title, description, handleClick }: HomeCardP
     return (
         <div>
             <div className={cn('px-4 py-6 flex flex-col justify-between w-full xl:max-w-[270px] min-h-[260px] rounded-[14px] cursor-pointer', className)}
-                onClick={() => { }}
+                onClick={() => { handleClick }}
             >
                 <div className="flex flex-center glassmorphism size-12 rounded-[10px]">
                     <Image
-                        src="/icons/add-meeting.svg"
+                        src={img}
                         alt="meetings"
                         width={27}
                         height={27}
@@ -26,10 +26,10 @@ const HomeCard = ({ className, img, title, description, handleClick }: HomeCardP
                 </div>
                 <div className="flex flex-col gap-2">
                     <h1 className="text-2xl font-bold">
-                        New meeting
+                        {title}
                     </h1>
                     <p className="text-lg font-normal">
-                        Start an instant meeting
+                        {description}
                     </p>
                 </div>
             </div>
