@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 import HomeCard from './HomeCard';
 import MeetingModal from './MeetingModal';
 import { useUser } from '@clerk/nextjs';
+import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useToast } from "@/components/ui/use-toast"
+
+
 
 const initialValues = {
   dateTime: new Date(),
@@ -15,19 +19,65 @@ const initialValues = {
 };
 
 const MeetingTypeList = () => {
+
+  const { toast } = useToast()
+
   const router = useRouter();
   const [meetingState, setMeetingState] = useState<
     'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
   >(undefined);
-  
+  const { user } = useUser()
+  const client = useStreamVideoClient()
+
+  const [values, setValues] = useState({
+    dateTime: new Date(),
+    description: '',
+    link: ''
+  })
+
+  const [callDetail, setCallDetail] = useState<Call>()
 
   const createMeeting = async () => {
-   
+    if (!client || !user) return;
+    try {
+      if (!values.dateTime) {
+        toast({ title: 'Please select a date and time' });
+        return;
+      }
+      const id = require('crypto').randomBytes(32).toString('hex')
+      const call = client.call('default', id);
+
+      if (!call) throw new Error('Failed to create meeting');
+
+      const startsAt =
+        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+      const description = values.description || 'Instant Meeting';
+      await call.getOrCreate({
+        data: {
+          starts_at: startsAt,
+          custom: {
+            description,
+          },
+        },
+      });
+      setCallDetail(call);
+      if (!values.description) {
+        router.push(`/meeting/${call.id}`);
+      }
+      toast({
+        title: 'Meeting Created',
+      });
+
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Failed To Create Meeting" })
+    }
   };
 
 
   return (
     <section className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+
       <HomeCard
         img="/icons/add-meeting.svg"
         title="New Meeting"
@@ -57,7 +107,7 @@ const MeetingTypeList = () => {
         handleClick={() => router.push('/recordings')}
       />
 
-      
+
 
       <MeetingModal
         isOpen={meetingState === 'isInstantMeeting'}
