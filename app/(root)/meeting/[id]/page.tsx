@@ -15,15 +15,15 @@ const Meeting = ({ params: { id } }: { params: { id: string } }) => {
 
     const { call, isCallLoading } = useGetCallId(id)
 
-    if(!isLoaded || isCallLoading) return <Loader />
+    if (!isLoaded || isCallLoading) return <Loader />
 
-    
+
     return (
         <main className='h-screen w-full'>
-            <StreamCall call={ }>
+            <StreamCall call={call}>
                 <StreamTheme >
                     {!isSetupComplete ? (
-                        <MeetingSetup />
+                        <MeetingSetup setIsSetupComplete={setIsSetupComplete} />
                     ) : (
                         <MeetingRoom />
                     )
