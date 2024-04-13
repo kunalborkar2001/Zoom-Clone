@@ -44,6 +44,7 @@ const MeetingTypeList = () => {
       const startsAt =
         values.dateTime.toISOString() || new Date(Date.now()).toISOString();
       const description = values.description || 'Instant Meeting';
+    
       await call.getOrCreate({
         data: {
           starts_at: startsAt,
@@ -52,6 +53,7 @@ const MeetingTypeList = () => {
           },
         },
       });
+
       setCallDetail(call);
       if (!values.description) {
         router.push(`/meeting/${call.id}`);
