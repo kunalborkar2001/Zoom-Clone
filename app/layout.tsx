@@ -4,8 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 const inter = Inter({ subsets: ["latin"] });
 import { Toaster } from "@/components/ui/toaster"
-
 import '@stream-io/video-react-sdk/dist/css/styles.css'
+import 'react-datepicker/dist/react-datepicker.css'
 export const metadata: Metadata = {
   title: "Zoom by Kunal",
   description: "Video Calling App",
