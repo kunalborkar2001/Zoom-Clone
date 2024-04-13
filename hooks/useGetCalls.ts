@@ -33,7 +33,7 @@ export const useGetCalls = () => {
       } finally {
         setIsLoading(false);
       }
-    };
+    }; 
 
     loadCalls();
   }, [client, user?.id]);
